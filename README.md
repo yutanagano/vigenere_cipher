@@ -7,6 +7,22 @@ key, where each letter represents a particular shift value (A=0, B=1, etc.).
 See [the wikipedia page](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher)
 for more details.
 
+## Use
+
+The program (the executable will be named `vcipher` once compiled) will take in
+a cipher key as a command line option (using -k) and output an accordingly 
+encrypted version of each line of text it sees in the standard input stream.
+
+By default, it will run in encryption mode, but by specifying decryption mode
+(using option -d) it can decrypt messages symmetrically using the same key as
+well.
+
+    $ echo "text" | ./vcipher -k key
+    > divd
+
+    $ echo "divd" | ./vcipher -k key -d
+    > text
+
 ## Building
 
 Make sure that you have [gcc](https://en.wikipedia.org/wiki/GNU_Compiler_Collection)
