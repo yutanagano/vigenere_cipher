@@ -13,6 +13,9 @@ The program (the executable will be named `vcipher` once compiled) will take in
 a cipher key as a command line option (using -k) and output an accordingly 
 encrypted version of each line of text it sees in the standard input stream.
 
+> Note: `vcipher` will only read up to 100 characters per line in the standard
+> input.
+
 By default, it will run in encryption mode, but by specifying decryption mode
 (using option -d) it can decrypt messages symmetrically using the same key as
 well.
@@ -23,16 +26,42 @@ well.
     $ echo "divd" | ./vcipher -k key -d
     > text
 
+> Note: The cipher will preserve letter capitalisation in the output. All
+> non-alphabetic characters will remain untouched by `vcipher`, but note that 
+> in this implementation, the non-alphabetic characters still contribute to the
+> text-key alignment process. See below for an illustration.
+
+    $ echo "text text0text" | ./vcipher -k key
+    > divd robr0xchx
+
+    ... because the key-text alignment is as below ...
+
+    key:    k e y k e y k e y k e y k e
+    text:   t e x t   t e x t 0 t e x t
+    -----------------------------------
+            d i v d   r o b r 0 x c h x
+
 ## Building
 
 Make sure that you have [gcc](https://en.wikipedia.org/wiki/GNU_Compiler_Collection)
-installed on your system. Clone this repo. Then, inside the root directory of
-this project, run:
+and [make](https://en.wikipedia.org/wiki/Make_(software)) installed on your
+system. Clone this repo. Then, inside the root directory of this project, run:
 
     make main
 
 This will compile a binary of this project onto the current directory. The file
 will be named `vcipher`.
+
+If you don't have or don't want to use make, you can manually build by
+compiling and linking the files as listed below.
+
+    gcc \
+     main/main.c \
+	 src/process_key/process_key.c \
+	 src/string_transform/string_transform.c \
+	 src/caesar_transform_char/caesar_transform_char.c \
+	 src/get_shift_at_position/get_shift_at_position.c \
+	 -o vcipher
 
 ## Testing
 
